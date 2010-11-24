@@ -1,3 +1,9 @@
+nodejs-amqp (0.0.2a-0sg9) UNRELEASED; urgency=low
+
+  * UNRELEASED
+
+ -- SimpleGeo Nerds <nerds@simplegeo.com>  Wed, 24 Nov 2010 22:58:20 +0000
+
 nodejs-amqp (0.0.2a-0sg0) unstable; urgency=low
 
   * Replace symlink.
