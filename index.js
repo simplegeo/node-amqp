@@ -1,1 +1,1 @@
-amqp.js
+module.exports = require('./amqp');
