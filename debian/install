@@ -1,1 +1,4 @@
-amqp.js /usr/lib/nodejs
+amqp.js usr/lib/nodejs/amqp
+amqp-definitions-0-8.js usr/lib/nodejs/amqp
+promise.js usr/lib/nodejs/amqp
+index.js usr/lib/nodejs/amqp
