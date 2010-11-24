@@ -1,3 +1,9 @@
+nodejs-amqp (0.0.2a-0sg0) unstable; urgency=low
+
+  * Replace symlink.
+
+ -- Wade Simmons <wade@simplegeo.com>  Wed, 24 Nov 2010 22:54:27 +0000
+
 nodejs-amqp (0.0.2-0sg0) unstable; urgency=low
 
   * Debianized
