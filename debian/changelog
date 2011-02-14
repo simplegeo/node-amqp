@@ -1,3 +1,12 @@
+nodejs-amqp (0.0.2a-0sg14) UNRELEASED; urgency=low
+
+  [ Wade Simmons ]
+  * ignore channelFlow messages (don't tell anyone)
+
+  [ SimpleGeo Nerds ]
+
+ -- SimpleGeo Nerds <nerds@simplegeo.com>  Mon, 14 Feb 2011 04:26:00 +0000
+
 nodejs-amqp (0.0.2a-0sg13) UNRELEASED; urgency=low
 
   * UNRELEASED
