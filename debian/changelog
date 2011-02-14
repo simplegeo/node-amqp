@@ -1,3 +1,34 @@
+nodejs-amqp (0.0.2a-0sg15) UNRELEASED; urgency=low
+
+  [ Michael Bridgen ]
+  * Fix a couple of mistakes brought to light to publisuing buffers.
+    Namely: a one-off false alarm in serializeInt; and accidentally
+    writing two bytes for a frame end, because 206 isn't an ascii char.
+  * Handle empty queue names (used to indicate that the server should
+    generate a random name).
+  * Enable the ability to publish to the default exchange; that is, the
+    exchange with the empty name that is used to publish directly to
+    queues.
+  * Update the readme after my changes; in particular wrt the default
+    exchange. Pass the name in the queue creation callback, as it may
+    have been generated and returned by the server.
+  * Give all message properties to the subscriber.  Also allow options
+    to connection.publish, which seems to have been arbitrarily missed
+    out.
+  * Support multiple consumers on a single connection. Previously, node-
+    amqp would add subscribers to the listeners, which meant rather than
+    the particular subscriber callback being called, every subscriber
+    callback was called.  Now they are distinguished by consumer tag (we
+    supply our own, so we don't have to wait for the server to tell us
+    its generated one, which is awkward in CPS). You can still get the
+    raw messages by listening for rawMessage rather than using
+    subscribe*.
+  * Allow channels (queues, exchanges) to be closed
+
+  [ SimpleGeo Nerds ]
+
+ -- SimpleGeo Nerds <nerds@simplegeo.com>  Mon, 14 Feb 2011 22:08:42 +0000
+
 nodejs-amqp (0.0.2a-0sg14) UNRELEASED; urgency=low
 
   [ Wade Simmons ]
