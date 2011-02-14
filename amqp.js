@@ -1400,6 +1400,11 @@ Queue.prototype._onMethod = function (channel, method, args) {
       this.currentMessage = new Message(this, args);
       break;
 
+    case methods.channelFlow:
+      sys.puts("Warning: Uncaught channelFlow: "+JSON.stringify(args));
+      this.emit('channelFlow', args);
+      break;
+
     default:
       throw new Error("Uncaught method '" + method.name + "' with args " +
           JSON.stringify(args));
@@ -1481,6 +1486,11 @@ Exchange.prototype._onMethod = function (channel, method, args) {
     case methods.basicReturn:
       sys.puts("Warning: Uncaught basicReturn: "+JSON.stringify(args));
       this.emit('basicReturn', args);
+      break;
+
+    case methods.channelFlow:
+      sys.puts("Warning: Uncaught channelFlow: "+JSON.stringify(args));
+      this.emit('channelFlow', args);
       break;
 
     default:
