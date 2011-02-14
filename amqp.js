@@ -1251,9 +1251,10 @@ Queue.prototype.subscribe = function (/* options, messageListener */) {
 
   var messageListener = arguments[arguments.length-1];
 
-  var options = { ack: false };
+  var options = { ack: false , prefetchCount: 1 };
   if (typeof arguments[0] == 'object') {
     if (arguments[0].ack) options.ack = true;
+    if (arguments[0].prefetchCount) options.prefetchCount = arguments[0].prefetchCount;
   }
 
   if (options.ack) {
@@ -1261,7 +1262,7 @@ Queue.prototype.subscribe = function (/* options, messageListener */) {
       self.connection._sendMethod(self.channel, methods.basicQos,
           { ticket: 0
           , prefetchSize: 0
-          , prefetchCount: 1
+          , prefetchCount: options.prefetchCount
           , global: false
           });
     });
@@ -1304,7 +1305,7 @@ Queue.prototype.subscribe = function (/* options, messageListener */) {
       json._deliveryTag = m.deliveryTag;
       json._properties = m.properties;
 
-      messageListener(json);
+      messageListener(json, m);
     });
   });
 };
