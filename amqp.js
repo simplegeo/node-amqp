@@ -1255,6 +1255,7 @@ Queue.prototype.subscribe = function (/* options, messageListener */) {
   if (typeof arguments[0] == 'object') {
     if (arguments[0].ack) options.ack = true;
     if (arguments[0].prefetchCount) options.prefetchCount = arguments[0].prefetchCount;
+    if (arguments[0].parseJSON === false) options.parseJSON = false;
   }
 
   if (options.ack) {
