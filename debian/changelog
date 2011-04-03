@@ -1,3 +1,12 @@
+nodejs-amqp (0.0.2a-0sg18) UNRELEASED; urgency=low
+
+  [ Wade Simmons ]
+  * make it possible to pass {parseJSON: false} option to subscribe
+
+  [ SimpleGeo Nerds ]
+
+ -- SimpleGeo Nerds <nerds@simplegeo.com>  Sun, 03 Apr 2011 18:05:02 +0000
+
 nodejs-amqp (0.0.2a-0sg17) UNRELEASED; urgency=low
 
   * UNRELEASED
