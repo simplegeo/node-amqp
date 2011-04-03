@@ -1271,7 +1271,7 @@ Queue.prototype.subscribe = function (/* options, messageListener */) {
   // basic consume
   var rawOptions = { noAck: !options.ack };
   return this.subscribeRaw(rawOptions, function (m) {
-    var isJSON = (m.properties.contentType == 'text/json') || (m.properties.contentType == 'application/json');
+    var isJSON = options.parseJSON !== false && ((m.properties.contentType == 'text/json') || (m.properties.contentType == 'application/json'));
 
     var b;
 
