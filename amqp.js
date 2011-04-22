@@ -260,7 +260,7 @@ function parseInt (buffer, size) {
 
 function parseShortString (buffer) {
   var length = buffer[buffer.read++];
-  var s = buffer.utf8Slice(buffer.read, buffer.read+length);
+  var s = buffer.toString('utf-8', buffer.read, buffer.read+length);
   buffer.read += length;
   return s;
 }
@@ -508,7 +508,7 @@ function serializeShortString (b, string) {
     throw new Error("Not enough space in buffer for 'shortstr'");
   }
   b[b.used++] = byteLength;
-  b.utf8Write(string, b.used); // error here
+  b.write(string, b.used, 'utf8');
   b.used += byteLength;
 }
 
@@ -519,7 +519,7 @@ function serializeLongString (b, string) {
   if (typeof(string) == 'string') {
     var byteLength = Buffer.byteLength(string, 'utf8');
     serializeInt(b, 4, byteLength);
-    b.utf8Write(string, b.used);
+    b.write(string, b.used, 'utf-8');
     b.used += byteLength;
   } else if (typeof(string) == 'object') {
     serializeTable(b, string);
@@ -983,7 +983,7 @@ Connection.prototype._sendBody = function (channel, body, properties) {
     serializeInt(b, 2, channel);
     serializeInt(b, 4, length);
 
-    b.utf8Write(body, b.used);
+    b.write(body, b.used, 'utf8');
     b.used += length;
 
     b[b.used++] = 206; // constants.frameEnd;
@@ -1024,7 +1024,7 @@ Connection.prototype._sendBody = function (channel, body, properties) {
     serializeInt(b, 2, channel);
     serializeInt(b, 4, length);
 
-    b.asciiWrite(jsonBody, b.used);
+    b.write(jsonBody, b.used, 'ascii');
     b.used += length;
 
     b[b.used++] = 206; // constants.frameEnd;
@@ -1056,6 +1056,12 @@ Connection.prototype.queue = function (name /* options, openCallback */) {
   this.queues[name] = q;
   return q;
 };
+
+// remove a queue when it's closed (called from Queue)
+Connection.prototype.queueClosed = function (name) {
+  if (this.queues[name]) delete this.queues[name];
+};
+
 
 // connection.exchange('my-exchange', { type: 'topic' });
 // Options
@@ -1171,13 +1177,18 @@ Channel.prototype._tasksFlush = function () {
 };
 
 Channel.prototype._handleTaskReply = function (channel, method, args) {
-  var task = this._tasks[0];
-  if (task && task.reply == method) {
-    this._tasks.shift();
-    task.promise.emitSuccess();
-    this._tasksFlush();
-    return true;
+  var task, i;
+
+  for (i = 0; i < this._tasks.length; i++) {
+    if (this._tasks[i].reply == method) {
+      task = this._tasks[i];
+      this._tasks.splice(i, 1);
+      task.promise.emitSuccess();
+      this._tasksFlush();
+      return true;
+    }
   }
+
   return false;
 };
 
@@ -1357,6 +1368,7 @@ Queue.prototype.destroy = function (options) {
   var self = this;
   options = options || {};
   return this._taskPush(methods.queueDeleteOk, function () {
+    self.connection.queueClosed(self.name);
     self.connection._sendMethod(self.channel, methods.queueDelete,
         { ticket: 0
         , queue: self.name
@@ -1399,16 +1411,6 @@ Queue.prototype._onMethod = function (channel, method, args) {
       this.emit('open', args.queue, args.messageCount, args.consumerCount);
       break;
 
-    case methods.basicConsumeOk:
-      debug('basicConsumeOk', sys.inspect(args, null));
-      break;
-
-    case methods.queueBindOk:
-      break;
-
-    case methods.basicQosOk:
-      break;
-
     case methods.channelClose:
       this.state = "closed";
       var e = new Error(args.replyText);
@@ -1431,7 +1433,7 @@ Queue.prototype._onMethod = function (channel, method, args) {
 
     default:
       throw new Error("Uncaught method '" + method.name + "' with args " +
-          JSON.stringify(args));
+          JSON.stringify(args) + "; tasks = " + JSON.stringify(this._tasks));
   }
 
   this._tasksFlush();
