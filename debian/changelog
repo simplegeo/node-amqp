@@ -1,3 +1,24 @@
+nodejs-amqp (0.0.2a-0sg23) UNRELEASED; urgency=low
+
+  [ Ryan Dahl ]
+  * queue.delete -> queue.destroy typo in docs
+
+  [ Mike Shaver ]
+  * update to use new buffer interfaces for node 0.3.0
+
+  [ Jaakko Manninen ]
+  * handle queue destruction; use more unique consumerTag
+
+  [ Dave Pacheco ]
+  * handle out-of-order replies tests should use server from Makefile
+
+  [ Vincent Desjardins ]
+  * Serialize JSON string to utf8 instead of ascii.
+
+  [ SimpleGeo Nerds ]
+
+ -- SimpleGeo Nerds <nerds@simplegeo.com>  Mon, 25 Apr 2011 01:15:09 +0000
+
 nodejs-amqp (0.0.2a-0sg22) UNRELEASED; urgency=low
 
   * UNRELEASED
